@@ -29,15 +29,15 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.getMovies().observe(this
         ) { moviesAdapter.movies  = it}
-//        viewModel.loadMovies()
+        viewModel.loadMovies()
 
-        viewModel.getIsLoading().observe(this) {
-            if (it) {
-                binding.progressBarLoading.visibility = View.VISIBLE
-            } else {
-                binding.progressBarLoading.visibility = View.GONE
-            }
-        }
+//        viewModel.getIsLoading().observe(this) {
+//            if (it) {
+//                binding.progressBarLoading.visibility = View.VISIBLE
+//            } else {
+//                binding.progressBarLoading.visibility = View.GONE
+//            }
+//        }
 
         moviesAdapter.onReachEndListener = object : MoviesAdapter.OnReachEndListener{
             override fun onReachEnd() {

@@ -14,9 +14,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    init {
-        loadMovies()
-    }
+//    init {
+//        loadMovies()
+//    }
     companion object{
         const val TAG = "TEST_MainViewModel"
     }
@@ -34,23 +34,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadMovies(){
-        val loading = isLoading.value
-        if((loading != null) && loading){
-            return
-        }
+//        val loading = isLoading.value
+//        if((loading != null) && loading){
+//            return
+//        }
         val disposable = ApiFactory.apiService.loadMovies(page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe(object : Consumer<Disposable>{
-                override fun accept(t: Disposable) {
-                    isLoading.value = true
-                }
-            })
-            .doAfterTerminate(object : Action{
-                override fun run() {
-                    isLoading.value = false
-                }
-            })
+//            .doOnSubscribe(object : Consumer<Disposable>{
+//                override fun accept(t: Disposable) {
+//                    isLoading.value = true
+//                }
+//            })
+//            .doAfterTerminate(object : Action{
+//                override fun run() {
+//                    isLoading.value = false
+//                }
+//            })
             .subscribe(object : Consumer<MovieResponse> {
                 override fun accept(t: MovieResponse) {
                     val loadedMovies = movies.value
