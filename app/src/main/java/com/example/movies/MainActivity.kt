@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.getMovies().observe(this
         ) { moviesAdapter.movies  = it}
-        viewModel.loadMovies()
+//        viewModel.loadMovies()
 
         viewModel.getIsLoading().observe(this) {
             if (it) {
