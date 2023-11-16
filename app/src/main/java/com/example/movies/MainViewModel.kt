@@ -31,7 +31,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 override fun accept(t: MovieResponse) {
                     val loadedMovies = movies.value
                     if(loadedMovies != null){
-                        loadedMovies.containsAll(t.movies)
+//                        loadedMovies.containsAll(t.movies)
+                        loadedMovies.plus(t.movies)
                         movies.value = loadedMovies
                     } else{
                         movies.value = t.movies
