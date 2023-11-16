@@ -57,7 +57,7 @@ class MoviesAdapter(private val context: Context) : RecyclerView.Adapter<MoviesA
         holder.textViewRating.text = rating.toString().substring(0, 3)
         holder.textViewRating.setBackgroundResource(backgroundId)
 
-        if (onReachEndListener != null && position == movies.size - 1){
+        if (onReachEndListener != null && position >= movies.size - 10){
              onReachEndListener?.onReachEnd()
         }
     }

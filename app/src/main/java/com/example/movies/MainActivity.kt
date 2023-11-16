@@ -3,6 +3,7 @@ package com.example.movies
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movies.databinding.ActivityMainBinding
@@ -30,6 +31,14 @@ class MainActivity : AppCompatActivity() {
         ) { moviesAdapter.movies  = it}
         viewModel.loadMovies()
 
+        viewModel.getIsLoading().observe(this) {
+            if (it) {
+                binding.progressBarLoading.visibility = View.VISIBLE
+            } else {
+                binding.progressBarLoading.visibility = View.GONE
+            }
+        }
+
         moviesAdapter.onReachEndListener = object : MoviesAdapter.OnReachEndListener{
             override fun onReachEnd() {
                 viewModel.loadMovies()
@@ -38,7 +47,4 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    companion object{
-        const val TAG = "TEST_MainActivity"
-    }
 } 

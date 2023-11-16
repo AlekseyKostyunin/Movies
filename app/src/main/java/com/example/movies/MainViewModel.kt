@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.functions.Action
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -16,6 +18,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         const val TAG = "TEST_MainViewModel"
     }
     private var movies = MutableLiveData<List<Movie>>()
+    private var isLoading = MutableLiveData<Boolean>(false)
     private var compositeDisposable = CompositeDisposable()
     private var page = 1
 
@@ -23,10 +26,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return movies
     }
 
+    fun getIsLoading() : LiveData<Boolean>{
+        return isLoading
+    }
+
     fun loadMovies(){
         val disposable = ApiFactory.apiService.loadMovies(page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe(object : Consumer<Disposable>{
+                override fun accept(t: Disposable) {
+                    isLoading.value = true
+                }
+            })
+            .doAfterTerminate(object : Action{
+                override fun run() {
+                    isLoading.value = false
+                }
+            })
             .subscribe(object : Consumer<MovieResponse> {
                 override fun accept(t: MovieResponse) {
                     val loadedMovies = movies.value
