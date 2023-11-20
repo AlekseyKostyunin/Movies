@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.movies.databinding.MovieItemBinding
 
-class MoviesAdapter(private val context: Context) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>(){
+class MoviesAdapter(context: Context) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>(){
 
     var onReachEndListener : OnReachEndListener? = null
+    var onMovieClickListener : OnMovieClickListener? = null
 
     var movies: List<Movie> = listOf()
         set(value) {
@@ -57,13 +58,21 @@ class MoviesAdapter(private val context: Context) : RecyclerView.Adapter<MoviesA
         holder.textViewRating.text = rating.toString().substring(0, 3)
         holder.textViewRating.setBackgroundResource(backgroundId)
 
-        if (onReachEndListener != null && position >= movies.size - 10){
+        if (onReachEndListener != null && position >= movies.size - 1){
              onReachEndListener?.onReachEnd()
+        }
+
+        holder.itemView.setOnClickListener{
+            onMovieClickListener?.onMovieClick(movie)
         }
     }
 
     interface OnReachEndListener{
         fun onReachEnd()
+    }
+
+    interface OnMovieClickListener{
+        fun onMovieClick(movie: Movie)
     }
 }
 

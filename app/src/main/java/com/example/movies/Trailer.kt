@@ -4,10 +4,13 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class Rating(
+data class Trailer(
 
-    @SerializedName("kp")
+    @SerializedName("name")
     @Expose
-    val kp: Double) : Serializable {
+    val name: String,
 
-}
+    @SerializedName("url")
+    @Expose
+    val url: String,
+)

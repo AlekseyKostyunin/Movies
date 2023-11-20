@@ -39,12 +39,18 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        }
 
-        moviesAdapter.onReachEndListener = object : MoviesAdapter.OnReachEndListener{
-            override fun onReachEnd() {
-                viewModel.loadMovies()
+//        moviesAdapter.onReachEndListener = object : MoviesAdapter.OnReachEndListener{
+//            override fun onReachEnd() {
+//                viewModel.loadMovies()
+//            }
+//        }
+//
+        moviesAdapter.onMovieClickListener = object : MoviesAdapter.OnMovieClickListener{
+            override fun onMovieClick(movie: Movie) {
+                val intent = MovieDetailActivity.newIntent(this@MainActivity, movie)
+                startActivity(intent)
             }
         }
-
     }
 
 } 

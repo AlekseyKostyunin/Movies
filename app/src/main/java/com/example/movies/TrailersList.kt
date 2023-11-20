@@ -4,10 +4,9 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class Rating(
+data class TrailersList(
 
-    @SerializedName("kp")
+    @SerializedName("trailers")
     @Expose
-    val kp: Double) : Serializable {
-
-}
+    val trailers: List<Trailer>
+)
