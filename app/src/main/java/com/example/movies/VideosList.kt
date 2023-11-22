@@ -3,13 +3,8 @@ package com.example.movies
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class Trailer(
-
-    @SerializedName("name")
+data class VideosList(
+    @SerializedName("videos")
     @Expose
-    val name: String,
-
-    @SerializedName("url")
-    @Expose
-    val url: String
+    val trailersList: TrailersList
 )

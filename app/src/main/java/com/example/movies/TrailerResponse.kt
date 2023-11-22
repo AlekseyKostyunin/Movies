@@ -2,11 +2,11 @@ package com.example.movies
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
 
 data class TrailerResponse(
 
-    @SerializedName("videos")
+    @SerializedName("docs")
     @Expose
-    val trailerslist: TrailersList
+//    val trailerslist: List<TrailersList>
+    val videosList: List<VideosList>
 )

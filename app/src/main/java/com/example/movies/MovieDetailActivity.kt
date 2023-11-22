@@ -1,25 +1,28 @@
 package com.example.movies
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.movies.databinding.ActivityMovieDetailBinding
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.functions.Consumer
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MovieDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMovieDetailBinding
+    private var viewModel = MovieDetailViewModel(application = Application())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
 
         binding = ActivityMovieDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
+
 
         Glide.with(this)
             .load(intent.getStringExtra("poster"))
@@ -28,18 +31,10 @@ class MovieDetailActivity : AppCompatActivity() {
         binding.textViewYear.text = intent.getIntExtra("year", 666).toString()
         binding.textViewDescription.text = intent.getStringExtra("description")
 
-        var result = ApiFactory.apiService.loadTrailers(intent.getIntExtra("id", 666))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Consumer<TrailerResponse>{
-                override fun accept(t: TrailerResponse) {
-                    Log.d("TEST_MovieDetailActivity", "Ok: " + t.toString())
-                }
-            }, object : Consumer<Throwable> {
-                override fun accept(t: Throwable) {
-                    Log.d("TEST_MovieDetailActivity", "Error: " + t.message)
-                }
-            })
+        viewModel.loadTrailers(intent.getIntExtra("id", 666))
+        viewModel.getTrailers().observe(this)   {
+            Log.d("TEST_MovieDetailActivity",it.toString())
+        }
 
     }
 
