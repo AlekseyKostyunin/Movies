@@ -3,10 +3,13 @@ package com.example.movies
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.movies.databinding.ActivityMovieDetailBinding
 
@@ -14,12 +17,21 @@ class MovieDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMovieDetailBinding
     private var viewModel = MovieDetailViewModel(application = Application())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
 
         binding = ActivityMovieDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val recyclerViewTrailers = binding.recyclerViewTrailers
+        val trailersAdapter = TrailersAdapter(this)
+        recyclerViewTrailers.adapter = trailersAdapter
+
+//        recyclerViewTrailers.layoutManager = GridLayoutManager(this,
+//            1)
+
 
         viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
 
@@ -34,6 +46,14 @@ class MovieDetailActivity : AppCompatActivity() {
         viewModel.loadTrailers(intent.getIntExtra("id", 666))
         viewModel.getTrailers().observe(this)   {
             Log.d("TEST_MovieDetailActivity",it.toString())
+            trailersAdapter.trailers = it
+        }
+        trailersAdapter.onTrailerClickListener = object : TrailersAdapter.OnTrailerClickListener {
+            override fun onTrailerClick(trailer: Trailer) {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(trailer.url)
+                startActivity(intent)
+            }
         }
 
     }

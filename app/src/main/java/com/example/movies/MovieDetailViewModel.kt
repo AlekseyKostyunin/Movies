@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
@@ -28,9 +29,11 @@ class MovieDetailViewModel(application: Application) : AndroidViewModel(applicat
         val disposable = ApiFactory.apiService.loadTrailers(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Consumer<TrailerResponse> {
-                override fun accept(t: TrailerResponse) {
-                    trailers.value = t.videosList[0].trailersList.trailers
+            .map { it.videosList[0].trailersList.trailers }
+            .subscribe(object : Consumer<List<Trailer>> {
+                override fun accept(t: List<Trailer>) {
+//                    trailers.value = t.videosList[0].trailersList.trailers
+                    trailers.value = t
                     Log.d(TAG, "Ok: " + t.toString())
                 }
             }, object : Consumer<Throwable> {

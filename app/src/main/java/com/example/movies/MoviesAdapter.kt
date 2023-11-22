@@ -63,7 +63,9 @@ class MoviesAdapter(context: Context) : RecyclerView.Adapter<MoviesAdapter.Movie
         }
 
         holder.itemView.setOnClickListener{
-            onMovieClickListener?.onMovieClick(movie)
+            if(onMovieClickListener != null){
+                onMovieClickListener?.onMovieClick(movie)
+            }
         }
     }
 
