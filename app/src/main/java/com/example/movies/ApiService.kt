@@ -8,10 +8,27 @@ interface ApiService {
 
     // "https://api.kinopoisk.dev/v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&limit=15&rating.kp=7-10&sortField=votes.kp&sortType=-1&notNullFields=poster.url"
     @GET("v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&limit=15&rating.kp=7-10&sortField=votes.kp&sortType=-1&notNullFields=poster.url")
-    fun loadMovies(@Query("page") page: Int): Single<MovieResponse>
+    fun loadMovies(
+        @Query("page")
+        page: Int
+    ): Single<MovieResponse>
 
     // https://api.kinopoisk.dev/v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&page=1&limit=1&selectFields=videos&id=666
     @GET("v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&page=1&limit=1&selectFields=videos")
-    fun loadTrailers(@Query("id") id: Int): Single<TrailerResponse>
+    fun loadTrailers(
+        @Query("id")
+        id: Int
+    ): Single<TrailerResponse>
+
+//    https://api.kinopoisk.dev/v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&field=trailers&search=666
+//    @GET("v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&field=trailers&search=666")
+//    fun loadTrailers(@Query("search") id: Int): Single<TrailerResponse>
+
+    // https://api.kinopoisk.dev/v1.4/review?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&field=movieid&search=666
+    @GET("v1.4/review?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&field=movieid")
+    fun loadReviews(
+        @Query("search")
+        movieId: Int
+    ): Single<ReviewResponse>
 
 }

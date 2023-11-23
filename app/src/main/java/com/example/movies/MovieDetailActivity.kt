@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.movies.databinding.ActivityMovieDetailBinding
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.functions.Consumer
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -54,6 +57,10 @@ class MovieDetailActivity : AppCompatActivity() {
                 intent.data = Uri.parse(trailer.url)
                 startActivity(intent)
             }
+        }
+        viewModel.loadReview(intent.getIntExtra("id", 666))
+        viewModel.getReviews().observe(this){
+            Log.d("TEST_загрузка_отзывов", "Ok: " + it.toString())
         }
 
     }
