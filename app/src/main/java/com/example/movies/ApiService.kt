@@ -20,14 +20,10 @@ interface ApiService {
         id: Int
     ): Single<TrailerResponse>
 
-//    https://api.kinopoisk.dev/v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&field=trailers&search=666
-//    @GET("v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&field=trailers&search=666")
-//    fun loadTrailers(@Query("search") id: Int): Single<TrailerResponse>
-
-    // https://api.kinopoisk.dev/v1.4/review?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&field=movieid&search=666
-    @GET("v1.4/review?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&field=movieid")
+    //https://api.kinopoisk.dev/v1.4/review?page=1&limit=10&selectFields=type&selectFields=review&selectFields=author&movieId=666
+    @GET("v1.4/review?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&page=1&limit=10&selectFields=type&selectFields=review&selectFields=author")
     fun loadReviews(
-        @Query("search")
+        @Query("movieId")
         movieId: Int
     ): Single<ReviewResponse>
 

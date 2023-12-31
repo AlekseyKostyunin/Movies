@@ -12,6 +12,7 @@ import com.example.movies.databinding.TrailerItemBinding
 class TrailersAdapter(context: Context) : RecyclerView.Adapter<TrailersAdapter.TrailersViewHolder>(){
 
      var onTrailerClickListener : OnTrailerClickListener? = null
+
      var trailers: List<Trailer> = listOf()
         set(value) {
             field = value

@@ -43,11 +43,11 @@ class MoviesAdapter(context: Context) : RecyclerView.Adapter<MoviesAdapter.Movie
         Log.d("TEST_Position",position.toString())
         val movie = movies[position]
         Glide.with(holder.itemView)
-            .load(movie.poster.url)
+            .load(movie.poster?.url)
             .into(holder.imageViewPoster)
 
-        val rating : Double = movie.rating.kp
-        val backgroundId = if(rating >= 7.0){
+        val rating : Double? = movie.rating?.kp
+        val backgroundId = if(rating!! >= 7.0){
             R.drawable.circle_green
         } else if(rating > 5.0){
             R.drawable.circle_orange

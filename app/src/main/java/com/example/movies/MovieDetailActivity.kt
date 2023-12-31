@@ -1,26 +1,23 @@
 package com.example.movies
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.movies.databinding.ActivityMovieDetailBinding
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.functions.Consumer
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MovieDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMovieDetailBinding
-    private var viewModel = MovieDetailViewModel(application = Application())
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
@@ -29,24 +26,26 @@ class MovieDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val recyclerViewTrailers = binding.recyclerViewTrailers
+        val recyclerViewReviews = binding.recyclerViewReviews
+
         val trailersAdapter = TrailersAdapter(this)
         recyclerViewTrailers.adapter = trailersAdapter
 
-//        recyclerViewTrailers.layoutManager = GridLayoutManager(this,
-//            1)
+        val reviewsAdapter = ReviewsAdapter(this)
+        recyclerViewReviews.adapter = reviewsAdapter
 
+        val viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
 
-        viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
-
+        val movie = intent.getSerializableExtra("movie", Movie::class.java)
 
         Glide.with(this)
-            .load(intent.getStringExtra("poster"))
+            .load(movie?.poster?.url)
             .into(binding.imageViewPoster)
-        binding.textViewTitle.text = intent.getStringExtra("name")
-        binding.textViewYear.text = intent.getIntExtra("year", 666).toString()
-        binding.textViewDescription.text = intent.getStringExtra("description")
+        binding.textViewTitle.text = movie?.name
+        binding.textViewYear.text = movie?.year.toString()
+        binding.textViewDescription.text = movie?.description
 
-        viewModel.loadTrailers(intent.getIntExtra("id", 666))
+        movie?.id?.let { viewModel.loadTrailers(it) }
         viewModel.getTrailers().observe(this)   {
             Log.d("TEST_MovieDetailActivity",it.toString())
             trailersAdapter.trailers = it
@@ -58,21 +57,56 @@ class MovieDetailActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-        viewModel.loadReview(intent.getIntExtra("id", 666))
+//        viewModel.loadReviews(intent.getIntExtra("id", 666))
+        movie?.id?.let { viewModel.loadReviews(it) }
         viewModel.getReviews().observe(this){
-            Log.d("TEST_загрузка_отзывов", "Ok: " + it.toString())
+            reviewsAdapter.reviews = it
+            //Log.d("TEST_загрузка_отзывов", "Ok: " + it.toString())
+        }
+
+        val starOff = ContextCompat.getDrawable(
+            this@MovieDetailActivity,
+            android.R.drawable.star_big_off
+        )
+        val starOn = ContextCompat.getDrawable(
+            this@MovieDetailActivity,
+            android.R.drawable.star_big_on
+        )
+
+        movie?.id?.let {
+            viewModel.getFavouriteMovie(it)
+                .observe(this){
+                    if(it == null){
+                        binding.imageViewStar.setImageDrawable(starOff)
+                        binding.imageViewStar.setOnClickListener{
+                            viewModel.insertMovie(movie)
+                        }
+                    }else{
+                        binding.imageViewStar.setImageDrawable(starOn)
+                        binding.imageViewStar.setOnClickListener{
+                            viewModel.removeMovie(movie.id)
+                        }
+                    }
+                }
         }
 
     }
 
     companion object{
-        fun newIntent(context: Context, movie: Movie): Intent{
+//        fun newIntent(context: Context, movie: Movie): Intent {
+//            val intent = Intent(context, MovieDetailActivity::class.java)
+//            intent.putExtra("poster", movie.poster.url)
+//            intent.putExtra("name", movie.name)
+//            intent.putExtra("year", movie.year)
+//            intent.putExtra("description", movie.description)
+//            intent.putExtra("rating", movie.rating.kp)
+//            intent.putExtra("id", movie.id)
+//            return intent
+//        }
+
+        fun newIntent(context: Context, movie: Movie): Intent {
             val intent = Intent(context, MovieDetailActivity::class.java)
-            intent.putExtra("poster", movie.poster.url)
-            intent.putExtra("name", movie.name)
-            intent.putExtra("year", movie.year)
-            intent.putExtra("description", movie.description)
-            intent.putExtra("id", movie.id)
+            intent.putExtra("movie", movie)
             return intent
         }
     }
