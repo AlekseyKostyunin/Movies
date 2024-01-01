@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.movies.databinding.ActivityMovieDetailBinding
+import java.io.Serializable
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -36,7 +37,14 @@ class MovieDetailActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProvider(this)[MovieDetailViewModel::class.java]
 
-        val movie = intent.getSerializableExtra("movie", Movie::class.java)
+        fun <T : Serializable?> Intent.getSerializable(key: String, m_class: Class<T>): T {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                this.getSerializableExtra(key, m_class)!!
+            else
+                this.getSerializableExtra(key) as T
+        }
+
+        val movie = intent.getSerializable("movie", Movie::class.java)
 
         Glide.with(this)
             .load(movie?.poster?.url)
@@ -110,4 +118,5 @@ class MovieDetailActivity : AppCompatActivity() {
             return intent
         }
     }
+
 }
