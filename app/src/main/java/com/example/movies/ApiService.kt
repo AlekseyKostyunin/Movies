@@ -6,8 +6,13 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    // "https://api.kinopoisk.dev/v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&limit=15&rating.kp=7-10&sortField=votes.kp&sortType=-1&notNullFields=poster.url"
-    @GET("v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&limit=15&rating.kp=7-10&sortField=votes.kp&sortType=-1&notNullFields=poster.url")
+    // "https://api.kinopoisk.dev/v1.4/movie?
+    // token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&
+    // limit=15&
+    // rating.kp=7-10&
+    // sortField=votes.kp&sortType=-1&
+    // notNullFields=poster.url"
+    @GET("v1.4/movie?token=VRY7JS6-4TB4C8P-MR49NYR-PDYB8KE&rating.kp=7-10&sortField=votes.kp&sortType=-1&notNullFields=poster.url&limit=30")
     fun loadMovies(
         @Query("page")
         page: Int
